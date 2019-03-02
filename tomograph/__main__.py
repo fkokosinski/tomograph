@@ -2,6 +2,7 @@ import argparse
 import numpy as np
 from tomograph import Tomograph
 from plot import visualize
+import cv2
 
 
 if __name__ == '__main__':
@@ -30,3 +31,15 @@ if __name__ == '__main__':
 
     if args.steps is not None:
         visualize(tomograph, step*args.steps)
+    else:
+        sinogram = []
+        for i in range(args.rotations):
+            tomograph.rotate(step)
+            sinogram.append(tomograph.scan())
+
+        sinogram = np.array(sinogram)
+        sinogram = np.rint(sinogram)
+        sinogram = sinogram.astype(int)
+        print(sinogram)
+
+        cv2.imwrite('test.bmp', sinogram)
