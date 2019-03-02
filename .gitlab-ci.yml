@@ -1,0 +1,12 @@
+stages:
+    - linting
+
+linting:
+    stage: linting
+    before_script:
+      - apt-get update -qq
+      - apt-get install -y -qq python3-flake8
+    script:
+      - python3 -m flake8
+    tags:
+      - shared
