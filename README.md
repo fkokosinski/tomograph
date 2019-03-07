@@ -1,2 +1,2 @@
 # tomograph
-Parametrized parallel tomograph simulator.
+Parametrized cone tomograph simulator.

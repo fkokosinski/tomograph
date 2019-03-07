@@ -5,13 +5,8 @@ from bresenham import bresenham
 
 class Tomograph():
     def coords_to_integer(self):
-        # round to the nearest integer
-        self.emitters = np.rint(self.emitters)
-        self.detectors = np.rint(self.detectors)
-
-        # convert to integers
-        self.emitters = self.emitters.astype(int)
-        self.detectors = self.detectors.astype(int)
+        self.emitter = np.rint(self.emitter).astype(int)
+        self.detectors = np.rint(self.detectors).astype(int)
 
     def rotate(self, alpha):
         self.alpha += alpha
@@ -20,7 +15,7 @@ class Tomograph():
             [-np.sin(alpha), np.cos(alpha)]
         ])
 
-        self.emitters = self.emitters.dot(rotation_mat)
+        self.emitter = self.emitter.dot(rotation_mat)
         self.detectors = self.detectors.dot(rotation_mat)
         self.coords_to_integer()
 
@@ -32,12 +27,12 @@ class Tomograph():
         off = np.array([x_off, y_off])
 
         # apply offset
-        emitters = self.emitters + off
+        emitter = self.emitter + off
         detectors = self.detectors + off
 
         pairs = []
-        for pair in zip(emitters, detectors):
-            pairs.append([*pair[0], *pair[1]])
+        for detector in detectors:
+            pairs.append((*emitter, *detector))
 
         lines = [bresenham(*x) for x in pairs]
 
@@ -58,7 +53,6 @@ class Tomograph():
         return scans
 
     def __init__(self, imgpath, num, span):
-        self.emitters = []
         self.detectors = []
 
         # rotation from base position
@@ -71,9 +65,17 @@ class Tomograph():
         shape = self.img.shape
         self.radius = np.sqrt(shape[0]**2 + shape[1]**2)/2
 
-        # calculate emitters/detecors coords
-        for x in np.linspace(-span/2, span/2, num=num):
-            self.emitters.append((x, self.radius))
-            self.detectors.append((x, -self.radius))
+        # emitter coord
+        self.emitter = np.array([0, -self.radius])
+
+        # detectors coords
+        sample_detector = np.array([0, self.radius])
+        span = np.deg2rad(span)
+        for alpha in np.linspace(-span/2, span/2, num=num):
+            rotation_mat = np.array([
+                [np.cos(alpha), np.sin(alpha)],
+                [-np.sin(alpha), np.cos(alpha)]
+            ])
+            self.detectors.append(sample_detector.dot(rotation_mat))
 
         self.coords_to_integer()

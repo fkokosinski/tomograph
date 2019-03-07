@@ -40,6 +40,5 @@ if __name__ == '__main__':
         sinogram = np.array(sinogram)
         sinogram = np.rint(sinogram)
         sinogram = sinogram.astype(int)
-        print(sinogram)
 
-        cv2.imwrite('test.bmp', sinogram)
+        cv2.imwrite('test.bmp', sinogram.T)
