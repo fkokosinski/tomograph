@@ -1,4 +1,3 @@
 numpy==1.16.*
 opencv-python==3.4.*
-matplotlib==2.2.*
 bresenham==0.2.*
