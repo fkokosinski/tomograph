@@ -71,7 +71,6 @@ class Tomograph():
 
         lines = [bresenham(*x) for x in pairs]
 
-        scans = []
         for line, value in zip(lines, values):
             filtered = [x for x in line if x[0] >= 0 and x[1] >= 0]
             filtered = [

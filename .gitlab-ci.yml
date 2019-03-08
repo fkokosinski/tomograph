@@ -1,12 +1,25 @@
+image: archlinux/base:latest
+
 stages:
     - linting
+    - dependencies
 
 linting:
     stage: linting
     before_script:
-      - apt-get update -qq
-      - apt-get install -y -qq python3-flake8
+        - pacman -Syu --noconfirm 
+        - pacman -S flake8 --noconfirm
     script:
-      - python3 -m flake8
+        - python3 -m flake8
     tags:
-      - shared
+        - shared
+
+dependencies:
+    stage: dependencies
+    before_script:
+        - pacman -Syu --noconfirm
+        - pacman -S python-pip
+    script:
+        - pip install -r requirements.txt
+    tags:
+        - shared
