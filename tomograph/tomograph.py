@@ -47,10 +47,40 @@ class Tomograph():
             for x, y in filtered:
                 sum += self.img[x, y]
 
-            sum /= len(filtered)
+            if sum > 0:
+                sum /= len(filtered)
+
             scans.append(sum)
 
         return scans
+
+    def draw(self, img, count, values):
+        # calculate offset
+        shape = self.img.shape
+        x_off = round(shape[0]/2)
+        y_off = round(shape[1]/2)
+        off = np.array([x_off, y_off])
+
+        # apply offset
+        emitter = self.emitter + off
+        detectors = self.detectors + off
+
+        pairs = []
+        for detector in detectors:
+            pairs.append((*emitter, *detector))
+
+        lines = [bresenham(*x) for x in pairs]
+
+        scans = []
+        for line, value in zip(lines, values):
+            filtered = [x for x in line if x[0] >= 0 and x[1] >= 0]
+            filtered = [
+                    x for x in filtered if x[0] < shape[0] and x[1] < shape[1]
+            ]
+
+            for x, y in filtered:
+                img[x, y] += value
+                count[x, y] += 1
 
     def __init__(self, imgpath, num, span):
         self.detectors = []

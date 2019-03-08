@@ -1,37 +1,30 @@
 import argparse
 import numpy as np
-from tomograph import Tomograph
-from plot import visualize
 import cv2
+from tomograph import Tomograph
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description='Parametrized parallel tomograph simulator'
+            description='Parametrized cone tomograph simulator'
     )
 
+    parser.add_argument('action', action='store', help='scan/draw image')
     parser.add_argument('image', action='store', help='absolute path to image')
     parser.add_argument('num', action='store', type=int,
-                        help='number of emitters/detectors')
+                        help='number of detectors')
     parser.add_argument('span', action='store', type=int,
                         help='emitter/detector span')
     parser.add_argument('rotations', action='store', type=int,
                         help='number of rotations')
-
-    plot_group = parser.add_argument_group('visualize')
-    plot_group.add_argument('--steps', action='store', type=int, default=None,
-                            help='use pyplot to visualize emitters/detectors \
-                            position after n steps instead of generating \
-                            sinogram')
+    parser.add_argument('out', action='store', help='output path')
 
     args = parser.parse_args()
 
     step = 2*np.pi / args.rotations
     tomograph = Tomograph(args.image, args.num, args.span)
 
-    if args.steps is not None:
-        visualize(tomograph, step*args.steps)
-    else:
+    if args.action == 'scan':
         sinogram = []
         for i in range(args.rotations):
             tomograph.rotate(step)
@@ -41,4 +34,15 @@ if __name__ == '__main__':
         sinogram = np.rint(sinogram)
         sinogram = sinogram.astype(int)
 
-        cv2.imwrite('test.bmp', sinogram.T)
+        cv2.imwrite(args.out, sinogram.T)
+    elif args.action == 'draw':
+        radon = cv2.imread(args.image, cv2.IMREAD_GRAYSCALE)
+        reverse = np.zeros(radon.shape, dtype=int)
+        count = np.zeros(radon.shape, dtype=int)
+
+        for i in range(args.rotations):
+            tomograph.rotate(step)
+            tomograph.draw(reverse, count, radon[:, i])
+
+        count[np.where(count == 0)] += 1
+        cv2.imwrite(args.out, reverse/count)
