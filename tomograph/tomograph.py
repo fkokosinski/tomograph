@@ -34,23 +34,18 @@ class Tomograph():
         for detector in detectors:
             pairs.append((*emitter, *detector))
 
-        lines = [bresenham(*x) for x in pairs]
-
         scans = []
-        for line in lines:
-            sum = 0
-            filtered = [x for x in line if x[0] >= 0 and x[1] >= 0]
-            filtered = [
-                    x for x in filtered if x[0] < shape[0] and x[1] < shape[1]
+        for pair in pairs:
+            points = np.array(list(bresenham(*pair)))
+            points = points[
+                    (points[:, 0] >= 0) &
+                    (points[:, 1] >= 0) &
+                    (points[:, 0] < shape[0]) &
+                    (points[:, 1] < shape[1])
             ]
 
-            for x, y in filtered:
-                sum += self.img[x, y]
-
-            if sum > 0:
-                sum /= len(filtered)
-
-            scans.append(sum)
+            mean = np.mean(self.img[tuple(zip(*points))])
+            scans.append(int(round(mean)))
 
         return scans
 
@@ -69,15 +64,16 @@ class Tomograph():
         for detector in detectors:
             pairs.append((*emitter, *detector))
 
-        lines = [bresenham(*x) for x in pairs]
-
-        for line, value in zip(lines, values):
-            filtered = [x for x in line if x[0] >= 0 and x[1] >= 0]
-            filtered = [
-                    x for x in filtered if x[0] < shape[0] and x[1] < shape[1]
+        for pair, value in zip(pairs, values):
+            points = np.array(list(bresenham(*pair)))
+            points = points[
+                    (points[:, 0] >= 0) &
+                    (points[:, 1] >= 0) &
+                    (points[:, 0] < shape[0]) &
+                    (points[:, 1] < shape[1])
             ]
 
-            for x, y in filtered:
+            for x, y in points:
                 img[x, y] += value
                 count[x, y] += 1
 
