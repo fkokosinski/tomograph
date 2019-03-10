@@ -34,7 +34,7 @@ if __name__ == '__main__':
         sinogram = np.rint(sinogram)
         sinogram = sinogram.astype(int)
 
-        cv2.imwrite(args.out, sinogram.T)
+        cv2.imwrite(args.out, 3*sinogram.T)
     elif args.action == 'draw':
         radon = cv2.imread(args.image, cv2.IMREAD_GRAYSCALE)
         reverse = np.zeros(radon.shape, dtype=int)
@@ -46,3 +46,19 @@ if __name__ == '__main__':
 
         count[np.where(count == 0)] += 1
         cv2.imwrite(args.out, reverse/count)
+
+        # filtering
+        ker = np.array([
+            [0, -1, 0],
+            [-1, 5, -1],
+            [0, -1, 0]
+        ])
+        filtered = reverse/count
+        out = np.empty(filtered.shape)
+
+        print("filtering...")
+        for x in range(1, filtered.shape[0]-1):
+            for y in range(1, filtered.shape[1]-1):
+                out[x-1, y-1] = np.sum(ker * filtered[x-1:x+2, y-1:y+2])
+
+        cv2.imwrite('filtered.bmp', out)
