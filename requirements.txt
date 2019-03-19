@@ -1,3 +1,5 @@
+click>=7.0
+tqdm>=4.31.1
 numpy==1.16.*
 opencv-python==3.4.*
 bresenham==0.2.*
