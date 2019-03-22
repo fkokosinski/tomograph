@@ -1,106 +1,93 @@
-import cv2
+import abc
 import numpy as np
-from bresenham import bresenham
+from skimage.io import imread
+from skimage.draw import line
+import utils
 
 
-class Tomograph():
-    def coords_to_integer(self):
-        self.emitter = np.rint(self.emitter).astype(int)
-        self.detectors = np.rint(self.detectors).astype(int)
+class BaseTomograph(metaclass=abc.ABCMeta):
+    """ Abstract computer tomography class. """
 
-    def rotate(self, alpha):
-        self.alpha += alpha
+    @abc.abstractmethod
+    def get_lines(self):
+        """ Get beam line from emitter to detector. """
+
+    def scan(self):
+        """ Perform a scan in current position of tomograph. """
+        scans = []
+        for beam_line in self.get_lines():
+            if np.sum(self.img[beam_line]) == 0:
+                scans.append(0)
+            else:
+                scans.append(np.mean(self.img[beam_line]))
+
+        return np.array(scans)
+
+    def draw(self, img, count, scans):
+        """ Reconstruct the original image in a particular position. """
+        pass
+
+    def rotate(self, angle):
+        """ Perform tomograph rotation. """
+        # convert to radians
+        alpha = np.deg2rad(angle)
+
+        # get rotation matrix
         rotation_mat = np.array([
             [np.cos(alpha), np.sin(alpha)],
             [-np.sin(alpha), np.cos(alpha)]
         ])
 
-        self.emitter = self.emitter.dot(rotation_mat)
-        self.detectors = self.detectors.dot(rotation_mat)
-        self.coords_to_integer()
+        # apply transformation to emitter/detector coords
+        self.emitters = utils.array_round(self.emitters.dot(rotation_mat))
+        self.detectors = utils.array_round(self.detectors.dot(rotation_mat))
 
-    def scan(self):
-        # calculate offset
-        shape = self.img.shape
-        x_off = round(shape[0]/2)
-        y_off = round(shape[1]/2)
-        off = np.array([x_off, y_off])
+    def __init__(self, emitters, detectors):
+        self.emitters = emitters
+        self.detectors = detectors
 
-        # apply offset
-        emitter = self.emitter + off
-        detectors = self.detectors + off
 
-        pairs = []
-        for detector in detectors:
-            pairs.append((*emitter, *detector))
+class ConeTomograph(BaseTomograph):
+    """ Cone beam tomography implementation of BaseTomograph. """
 
-        scans = []
-        for pair in pairs:
-            points = np.array(list(bresenham(*pair)))
-            points = points[
-                    (points[:, 0] >= 0) &
-                    (points[:, 1] >= 0) &
-                    (points[:, 0] < shape[0]) &
-                    (points[:, 1] < shape[1])
+    def get_lines(self):
+        """ Get coordinates that beams are going through. """
+        max_x, max_y = self.img.shape
+
+        # get offset
+        move = np.array(self.img.shape)
+        move = np.rint(move/2).astype(int)
+
+        # move emitter/detector coordinates
+        moved_emitter = self.emitters + move
+        moved_detectors = self.detectors + move
+
+        # get lines
+        lines = []
+        for detector in moved_detectors:
+            new_line = np.column_stack(line(*moved_emitter, *detector))
+            new_line = new_line[
+                    (new_line[:, 0] >= 0) &
+                    (new_line[:, 1] >= 0) &
+                    (new_line[:, 0] < max_x) &
+                    (new_line[:, 1] < max_y)
             ]
+            lines.append((new_line[:, 0], new_line[:, 1]))
 
-            mean = np.mean(self.img[tuple(zip(*points))])
-            scans.append(int(round(mean)))
+        return lines
 
-        return scans
+    def __init__(self, img, detectors_num, detectors_angle):
+        # read image and calculate radius
+        self.img = imread(img, as_gray=True)
+        radius = utils.calc_radius(*self.img.shape)
 
-    def draw(self, img, count, values):
-        # calculate offset
-        shape = self.img.shape
-        x_off = round(shape[0]/2)
-        y_off = round(shape[1]/2)
-        off = np.array([x_off, y_off])
+        # calulcate emitter/detector position
+        emitters = np.array([0, radius])
+        detectors = utils.circle_points(detectors_angle,
+                                        detectors_num, radius)
 
-        # apply offset
-        emitter = self.emitter + off
-        detectors = self.detectors + off
+        # round
+        emitters = utils.array_round(emitters)
+        detectors = utils.array_round(detectors)
 
-        pairs = []
-        for detector in detectors:
-            pairs.append((*emitter, *detector))
-
-        for pair, value in zip(pairs, values):
-            points = np.array(list(bresenham(*pair)))
-            points = points[
-                    (points[:, 0] >= 0) &
-                    (points[:, 1] >= 0) &
-                    (points[:, 0] < shape[0]) &
-                    (points[:, 1] < shape[1])
-            ]
-
-            for x, y in points:
-                img[x, y] += value
-                count[x, y] += 1
-
-    def __init__(self, imgpath, num, span):
-        self.detectors = []
-
-        # rotation from base position
-        self.alpha = 0.0
-
-        # our patient
-        self.img = cv2.imread(imgpath, cv2.IMREAD_GRAYSCALE)
-
-        # calculate tomograph's radius
-        shape = self.img.shape
-        self.radius = np.sqrt(shape[0]**2 + shape[1]**2)/2
-
-        # emitter coord
-        self.emitter = np.array([0, -self.radius])
-
-        # detectors coords
-        sample_detector = np.array([0, self.radius])
-        span = np.deg2rad(span)
-        for alpha in np.linspace(-span/2, span/2, num=num):
-            rotation_mat = np.array([
-                [np.cos(alpha), np.sin(alpha)],
-                [-np.sin(alpha), np.cos(alpha)]
-            ])
-            self.detectors.append(sample_detector.dot(rotation_mat))
-
-        self.coords_to_integer()
+        super(ConeTomograph, self).__init__(emitters, detectors)

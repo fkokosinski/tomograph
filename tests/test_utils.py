@@ -16,7 +16,7 @@ def test_array_round():
 
     rounded = array_round(arr)
     assert np.alltrue(rounded == expected)
-    
+
 
 def test_circle_points():
     angle = 180
@@ -31,4 +31,4 @@ def test_circle_points():
     points = circle_points(angle, num, radius)
 
     assert points.shape == (num, 2)
-    assert np.alltrue(points == expected) 
+    assert np.alltrue(points == expected)

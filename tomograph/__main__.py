@@ -1,8 +1,8 @@
 import click
-import cv2
 import numpy as np
+from skimage.io import imsave
 from tqdm import tqdm
-from tomograph import Tomograph
+from tomograph import ConeTomograph
 
 
 @click.command()
@@ -17,25 +17,18 @@ from tomograph import Tomograph
 @click.argument('patient')
 def main(detectors, angle, rotations, prefix, patient):
     """ Parametrized cone beam tomography simulator """
-    step = 2*np.pi / rotations
-    tomograph = Tomograph(patient, detectors, angle)
+    step = 360 / rotations
 
+    tomograph = ConeTomograph(patient, detectors, angle)
     sinogram = []
-    reverse = np.zeros(tomograph.img.shape, dtype=int)
-    count = np.zeros(tomograph.img.shape, dtype=int)
+    kernel = np.array([-2, 5, -2])
 
     for i in tqdm(range(rotations)):
         tomograph.rotate(step)
-        sinogram.append(tomograph.scan())
-        tomograph.draw(reverse, count, np.array(sinogram).T[:, i])
+        scan = tomograph.scan()
+        sinogram.append(np.convolve(scan, kernel))
 
-    sinogram = np.array(sinogram)
-    sinogram = np.rint(sinogram)
-    sinogram = sinogram.astype(int)
-    count[np.where(count == 0)] += 1
-
-    cv2.imwrite(f'{prefix}_radon.bmp', 3*sinogram.T)
-    cv2.imwrite(f'{prefix}_reverse.bmp', reverse/count)
+    imsave(f'{prefix}_radon.bmp', np.array(sinogram).T)
 
 
 if __name__ == '__main__':
