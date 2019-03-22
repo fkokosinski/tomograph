@@ -2,7 +2,7 @@ import click
 import numpy as np
 from skimage.io import imsave
 from tqdm import tqdm
-from tomograph import ConeTomograph
+from tomograph import ConeTomograph, ParallelTomograph
 
 
 @click.command()
@@ -19,7 +19,7 @@ def main(detectors, angle, rotations, prefix, patient):
     """ Parametrized cone beam tomography simulator """
     step = 360 / rotations
 
-    tomograph = ConeTomograph(patient, detectors, angle)
+    tomograph = ParallelTomograph(patient, detectors, angle)
     sinogram = []
     reverse = np.zeros(tomograph.img.shape, dtype=np.float64)
     count = np.zeros(tomograph.img.shape, dtype=np.float64)
@@ -33,8 +33,14 @@ def main(detectors, angle, rotations, prefix, patient):
 
     count[np.where(count == 0)] += 1
 
-    imsave(f'{prefix}_radon.bmp', np.array(sinogram).T)
-    imsave(f'{prefix}_reverse.bmp', reverse/count)
+    out = np.array(sinogram).T
+    out[np.where(out < 0.0)] = 0.0
+    out[np.where(out > 1.0)] = 1.0
+
+    out_reverse = reverse/count
+
+    imsave(f'{prefix}_radon.bmp', out)
+    imsave(f'{prefix}_reverse.bmp', out_reverse)
 
 
 if __name__ == '__main__':
