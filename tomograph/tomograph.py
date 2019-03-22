@@ -23,9 +23,11 @@ class BaseTomograph(metaclass=abc.ABCMeta):
 
         return np.array(scans)
 
-    def draw(self, img, count, scans):
+    def draw(self, out, count, scans):
         """ Reconstruct the original image in a particular position. """
-        pass
+        for beam_line, scan in zip(self.get_lines(), scans):
+            out[beam_line] += scan
+            count[beam_line] += 1
 
     def rotate(self, angle):
         """ Perform tomograph rotation. """
