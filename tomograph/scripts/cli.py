@@ -2,10 +2,17 @@ import click
 import numpy as np
 from skimage.io import imsave
 from tqdm import tqdm
-from tomograph.model import ParallelTomograph
+from tomograph.model import ConeTomograph, ParallelTomograph
 
+
+tomograph_switch = {
+        'cone': ConeTomograph,
+        'parallel': ParallelTomograph
+}
 
 @click.command()
+@click.option('--model', type=click.Choice(['cone', 'parallel']),
+              help='Model of beams used in tomography')
 @click.option('--detectors', required=True, type=int,
               help='Number of detectors')
 @click.option('--angle', required=True, type=float,
@@ -15,11 +22,15 @@ from tomograph.model import ParallelTomograph
 @click.option('--prefix', default='out', type=str,
               help='Prefix of output file names')
 @click.argument('patient')
-def main(detectors, angle, rotations, prefix, patient):
-    """ Parametrized cone beam tomography simulator """
+def main(model, detectors, angle, rotations, prefix, patient):
+    """ Parametrized computer tomography simulator """
     step = 360 / rotations
 
-    tomograph = ParallelTomograph(patient, detectors, angle)
+    # get tomography type
+    tomograph_type = tomograph_switch.get(model)
+    tomograph = tomograph_type(patient, detectors, angle)
+
+    # initialize needed structures
     sinogram = []
     reverse = np.zeros(tomograph.img.shape, dtype=np.float64)
     count = np.zeros(tomograph.img.shape, dtype=np.float64)
