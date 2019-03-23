@@ -10,6 +10,7 @@ tomograph_switch = {
         'parallel': ParallelTomograph
 }
 
+
 @click.command()
 @click.option('--model', type=click.Choice(['cone', 'parallel']),
               help='Model of beams used in tomography')
