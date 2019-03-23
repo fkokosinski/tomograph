@@ -2,7 +2,7 @@ import abc
 import numpy as np
 from skimage.io import imread
 from skimage.draw import line
-import utils
+from .utils import array_round, calc_radius, circle_points
 
 
 class BaseTomograph(metaclass=abc.ABCMeta):
@@ -41,8 +41,8 @@ class BaseTomograph(metaclass=abc.ABCMeta):
         ])
 
         # apply transformation to emitter/detector coords
-        self.emitters = utils.array_round(self.emitters.dot(rotation_mat))
-        self.detectors = utils.array_round(self.detectors.dot(rotation_mat))
+        self.emitters = array_round(self.emitters.dot(rotation_mat))
+        self.detectors = array_round(self.detectors.dot(rotation_mat))
 
     def __init__(self, emitters, detectors):
         self.emitters = emitters
@@ -81,16 +81,16 @@ class ConeTomograph(BaseTomograph):
     def __init__(self, img, detectors_num, detectors_angle):
         # read image and calculate radius
         self.img = imread(img, as_gray=True)
-        radius = utils.calc_radius(*self.img.shape)
+        radius = calc_radius(*self.img.shape)
 
         # calulcate emitter/detector position
         emitters = np.array([0, radius])
-        detectors = utils.circle_points(detectors_angle,
-                                        detectors_num, radius)
+        detectors = circle_points(detectors_angle,
+                                  detectors_num, radius)
 
         # round
-        emitters = utils.array_round(emitters)
-        detectors = utils.array_round(detectors)
+        emitters = array_round(emitters)
+        detectors = array_round(detectors)
 
         super(ConeTomograph, self).__init__(emitters, detectors)
 
@@ -126,10 +126,10 @@ class ParallelTomograph(BaseTomograph):
 
     def __init__(self, img, detectors_num, detectors_angle):
         self.img = imread(img, as_gray=True)
-        radius = utils.calc_radius(*self.img.shape)
+        radius = calc_radius(*self.img.shape)
 
-        detectors = utils.circle_points(detectors_angle,
-                                        detectors_num, radius)
-        emitters = detectors * np.array([1, -1]) 
+        detectors = circle_points(detectors_angle,
+                                  detectors_num, radius)
+        emitters = detectors * np.array([1, -1])
 
         super(ParallelTomograph, self).__init__(emitters, detectors)

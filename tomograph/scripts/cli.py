@@ -2,7 +2,7 @@ import click
 import numpy as np
 from skimage.io import imsave
 from tqdm import tqdm
-from tomograph import ConeTomograph, ParallelTomograph
+from tomograph.model import ParallelTomograph
 
 
 @click.command()
@@ -41,7 +41,3 @@ def main(detectors, angle, rotations, prefix, patient):
 
     imsave(f'{prefix}_radon.bmp', out)
     imsave(f'{prefix}_reverse.bmp', out_reverse)
-
-
-if __name__ == '__main__':
-    main()

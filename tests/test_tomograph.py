@@ -1,5 +1,5 @@
 import numpy as np
-from tomograph.tomograph import ConeTomograph
+from tomograph.model import ConeTomograph
 
 
 def test_tomograph_create():

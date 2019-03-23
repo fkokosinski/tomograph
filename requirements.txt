@@ -2,5 +2,3 @@ click==7.*
 tqdm==4.31.*
 numpy==1.15.*
 scikit-image==0.14.*
-opencv-python==3.4.*
-bresenham==0.2.*
