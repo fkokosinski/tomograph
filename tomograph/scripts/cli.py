@@ -51,5 +51,5 @@ def main(model, detectors, angle, rotations, prefix, patient):
 
     out_reverse = reverse/count
 
-    imsave(f'{prefix}_radon.bmp', out)
-    imsave(f'{prefix}_reverse.bmp', out_reverse)
+    imsave('{}_radon.bmp'.format(prefix), out)
+    imsave('{}_reverse.bmp'.format(prefix), out_reverse)
