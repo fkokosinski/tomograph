@@ -1,6 +1,6 @@
 # tomograph - paramterized computer tomography simulator
 
-[![Build Status](https://travis-ci.com/makuslaw/tomograph.svg?token=KqDQHrZxZ4q79UZ1qZJw&branch=master)](https://travis-ci.com/makuslaw/tomograph) [![codecov](https://codecov.io/gh/makuslaw/tomograph/branch/master/graph/badge.svg?token=SogoLYXs8u)](https://codecov.io/gh/makuslaw/tomograph)
+[![Build Status](https://travis-ci.com/makuslaw/tomograph.svg?token=KqDQHrZxZ4q79UZ1qZJw&branch=master)](https://travis-ci.com/makuslaw/tomograph) [![codecov](https://codecov.io/gh/fkokosinski/tomograph/branch/master/graph/badge.svg?token=SogoLYXs8u)](https://codecov.io/gh/makuslaw/tomograph)
 
 `tomograph` is a parametrized computer tomography simulator, which can be run as
 a standalone script or included as a module in your Python programs. It
