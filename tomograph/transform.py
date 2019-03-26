@@ -1,6 +1,19 @@
 import numpy as np
 
 
+def projective(coords):
+    """ Convert 2D cartesian coordinates to homogeneus/projective. """
+    num, _ = np.shape(coords)
+    w = np.array([[1], ]*num)
+
+    return np.append(coords, w, axis=1)
+
+
+def cartesian(coords):
+    """ Convert 2D homogeneus/projective coordinates to cartesian. """
+    return coords[:, :2]
+
+
 def translate(x, y):
     """ Return translation matrix. """
     return np.array([

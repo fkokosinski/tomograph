@@ -1,5 +1,35 @@
 import numpy as np
-from tomograph.transform import translate, rotate
+from tomograph.transform import projective, cartesian, translate, rotate
+
+
+def test_transform_projective():
+    """ Test tomograph.transform.projective convertion. """
+    coords = np.linspace(0, 9, num=10).reshape(5, 2)
+    expected = np.array([
+        [0.0, 1.0, 1.0],
+        [2.0, 3.0, 1.0],
+        [4.0, 5.0, 1.0],
+        [6.0, 7.0, 1.0],
+        [8.0, 9.0, 1.0],
+    ])
+
+    coords = projective(coords)
+    assert np.allclose(coords, expected)
+
+
+def test_transform_cartesian():
+    """ Test tomograph.transform.cartesian convertion. """
+    coords = np.array([
+        [0.0, 1.0, 1.0],
+        [2.0, 3.0, 1.0],
+        [4.0, 5.0, 1.0],
+        [6.0, 7.0, 1.0],
+        [8.0, 9.0, 1.0],
+    ])
+    expected = np.linspace(0, 9, num=10).reshape(5, 2)
+
+    coords = cartesian(coords)
+    assert np.allclose(coords, expected)
 
 
 def test_transform_translate():
