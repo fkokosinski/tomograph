@@ -80,14 +80,12 @@ def test_transform_list():
 def test_transform_apply():
     """ Test applying list of transformations to a list of coordinates. """
     coords = np.linspace(10, 100, num=10).reshape(5, 2)
-    w = np.array([[1], ]*5)
-    coords = np.append(coords, w, axis=1)
     expected = np.array([
-        [90, 30, 1],
-        [70, 10, 1],
-        [50, -10, 1],
-        [30, -30, 1],
-        [10, -50, 1]
+        [90, 30],
+        [70, 10],
+        [50, -10],
+        [30, -30],
+        [10, -50]
     ])
 
     t_mat = translate(100, 50)

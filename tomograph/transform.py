@@ -39,10 +39,10 @@ def transform_list(coords, matrix):
 
 def transform_apply(coords, transforms):
     """ Apply list of transformations to a list of coordinates. """
-    out = coords
+    out = projective(coords)
     transforms_r = transforms[::-1]
 
     for transform in transforms_r:
         out = transform_list(out, transform)
 
-    return out
+    return cartesian(out)
