@@ -4,9 +4,20 @@ from tomograph.model import BaseTomograph
 
 class DummyTomograph(BaseTomograph):
     def get_lines(self):
+        lines = []
+
+        # first line
         x = np.linspace(0, 9, num=10, dtype=int)
         line = (x, x)
-        return [line]
+        lines.append(line)
+
+        # second line
+        x = np.zeros(10, dtype=int)
+        y = np.linspace(0, 9, num=10, dtype=int)
+        line = (x, y)
+        lines.append(line)
+
+        return lines
 
     def __init__(self, emitters, detectors):
         super(DummyTomograph, self).__init__(emitters, detectors)
@@ -47,7 +58,7 @@ def test_model_base_tomograph_rotate():
 
 
 def test_model_base_tomograph_scan():
-    expected = np.array([0.4])
+    expected = np.array([0.4, 0.0])
 
     # not really needed, only for tomograph constructor
     detectors = np.array([])
@@ -69,12 +80,13 @@ def test_model_base_tomograph_draw():
     expected_out = np.zeros((10, 10))
     expected_count = np.zeros((10, 10))
     expected_out[x, x] = 0.67
-    expected_count[x, x] = 1
+    expected_count[x, x] += 1
+    expected_count[0, x] += 1
 
     # not really needed, only for tomograph constructor
     detectors = np.array([])
     emitters = np.array([])
-    scans = np.array([0.67])
+    scans = np.array([0.67, 0.0])
 
     # prepare arrays
     out = np.zeros((10, 10))
