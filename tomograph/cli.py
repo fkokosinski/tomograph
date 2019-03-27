@@ -40,7 +40,8 @@ def main(model, detectors, angle, rotations, prefix, patient):
     for i in tqdm(range(rotations)):
         tomograph.rotate(step)
         scan = tomograph.scan()
-        sinogram.append(np.convolve(scan, kernel))
+        #sinogram.append(np.convolve(scan, kernel))
+        sinogram.append(scan)
         tomograph.draw(reverse, count, scan)
 
     count[np.where(count == 0)] += 1

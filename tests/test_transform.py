@@ -81,11 +81,11 @@ def test_transform_apply():
     """ Test applying list of transformations to a list of coordinates. """
     coords = np.linspace(10, 100, num=10).reshape(5, 2)
     expected = np.array([
-        [90, 30],
-        [70, 10],
-        [50, -10],
-        [30, -30],
-        [10, -50]
+        [-110, -70],
+        [-130, -90],
+        [-150, -110],
+        [-170, -130],
+        [-190, -150]
     ])
 
     t_mat = translate(100, 50)

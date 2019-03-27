@@ -16,6 +16,7 @@ class BaseTomograph(metaclass=abc.ABCMeta):
     def scan(self):
         """ Perform a scan in current position of tomograph. """
         scans = []
+
         for beam_line in self.get_lines():
             if np.sum(self.img[beam_line]) == 0:
                 scans.append(0)
@@ -49,7 +50,7 @@ class ConeTomograph(BaseTomograph):
 
         # get transformations
         mat_t = translate(max_x/2, max_y/2)
-        mat_r = rotate(self.angle)
+        mat_r = rotate(np.deg2rad(self.angle))
         transformations = [mat_r, mat_t]
 
         # transform
@@ -99,25 +100,30 @@ class ParallelTomograph(BaseTomograph):
         """ Get coordinates that beams are going through. """
         max_x, max_y = self.img.shape
 
-        # get offset
-        move = np.array(self.img.shape)
-        move = np.rint(move/2).astype(int)
+        # get transformations
+        mat_t = translate(max_x/2, max_y/2)
+        mat_r = rotate(self.angle)
+        transformations = [mat_r, mat_t]
 
-        # move emitter/detector coordinates
-        moved_emitters = self.emitters + move
-        moved_detectors = self.detectors + move
+        # transform
+        emitters_t = transform_apply(self.emitters, transformations)
+        detectors_t = transform_apply(self.detectors, transformations)
+
+        # round
+        emitters_t = array_round(emitters_t)
+        detectors_t = array_round(detectors_t)
 
         # get lines
         lines = []
-        for emitter, detector in zip(moved_emitters, moved_detectors):
+        for emitter, detector in zip(emitters_t, detectors_t):
             new_line = np.column_stack(line(*emitter, *detector))
-            new_line = new_line[
-                    (new_line[:, 0] >= 0) &
-                    (new_line[:, 1] >= 0) &
-                    (new_line[:, 0] < max_x) &
-                    (new_line[:, 1] < max_y)
-            ]
-            lines.append((new_line[:, 0], new_line[:, 1]))
+            #new_line = new_line[
+            #        (new_line[:, 0] >= 0) &
+            #        (new_line[:, 1] >= 0) &
+            #        (new_line[:, 0] < max_x) &
+            #        (new_line[:, 1] < max_y)
+            #]
+            #lines.append((new_line[:, 0], new_line[:, 1]))
 
         return lines
 
