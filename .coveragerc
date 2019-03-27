@@ -11,4 +11,5 @@ exclude_lines =
 ignore_errors = True
 omit =
     tomograph/cli.py
+    tomograph/__main__.py
     tests/*
