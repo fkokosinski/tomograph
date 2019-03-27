@@ -2,7 +2,8 @@ import abc
 import numpy as np
 from skimage.io import imread
 from skimage.draw import line
-from .utils import array_round, calc_radius, circle_points
+from tomograph.transform import translate, rotate, transform_apply
+from tomograph.utils import array_round, calc_radius, circle_points
 
 
 class BaseTomograph(metaclass=abc.ABCMeta):
@@ -46,18 +47,24 @@ class ConeTomograph(BaseTomograph):
         """ Get coordinates that beams are going through. """
         max_x, max_y = self.img.shape
 
-        # get offset
-        move = np.array(self.img.shape)
-        move = np.rint(move/2).astype(int)
+        # get transformations
+        mat_t = translate(max_x/2, max_y/2)
+        mat_r = rotate(self.angle)
+        transformations = [mat_r, mat_t]
 
-        # move emitter/detector coordinates
-        moved_emitter = self.emitters + move
-        moved_detectors = self.detectors + move
+        # transform
+        emitters_t = transform_apply(self.emitters, transformations)
+        detectors_t = transform_apply(self.detectors, transformations)
+
+        # round
+        emitters_t = array_round(emitters_t)
+        detectors_t = array_round(detectors_t)
 
         # get lines
         lines = []
-        for detector in moved_detectors:
-            new_line = np.column_stack(line(*moved_emitter, *detector))
+        emitter = emitters_t[0]
+        for detector in detectors_t:
+            new_line = np.column_stack(line(*emitter, *detector))
             new_line = new_line[
                     (new_line[:, 0] >= 0) &
                     (new_line[:, 1] >= 0) &
