@@ -49,6 +49,7 @@ def main(model, detectors, angle, rotations, prefix, patient):
     out[np.where(out > 1.0)] = 1.0
 
     out_reverse = reverse/count
+    out_reverse /= np.amax(out_reverse) + 0.25
 
     imsave('{}_radon.bmp'.format(prefix), out)
     imsave('{}_reverse.bmp'.format(prefix), out_reverse)
