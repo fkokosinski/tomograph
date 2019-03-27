@@ -1,4 +1,4 @@
-from tomograph.scripts.cli import main
+from tomograph.cli import main
 
 
 if __name__ == '__main__':

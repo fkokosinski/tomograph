@@ -2,7 +2,7 @@ import setuptools
 
 
 entry_points = {
-        'console_scripts': ['tomograph = tomograph.scripts.cli:main']
+        'console_scripts': ['tomograph = tomograph.cli:main']
 }
 
 setuptools.setup(
