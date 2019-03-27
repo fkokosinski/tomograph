@@ -21,7 +21,7 @@ Simply run:
 
     pip install tomograph
 
-Tomograph supports Python 3.6 and Python 3.7.
+Tomograph supports Python 3.5, Python 3.6 and Python 3.7.
 
 ## Usage
 `tomograph` can be used directly through command-line interface or as a Python
