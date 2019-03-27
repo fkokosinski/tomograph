@@ -117,13 +117,13 @@ class ParallelTomograph(BaseTomograph):
         lines = []
         for emitter, detector in zip(emitters_t, detectors_t):
             new_line = np.column_stack(line(*emitter, *detector))
-            #new_line = new_line[
-            #        (new_line[:, 0] >= 0) &
-            #        (new_line[:, 1] >= 0) &
-            #        (new_line[:, 0] < max_x) &
-            #        (new_line[:, 1] < max_y)
-            #]
-            #lines.append((new_line[:, 0], new_line[:, 1]))
+            new_line = new_line[
+                    (new_line[:, 0] >= 0) &
+                    (new_line[:, 1] >= 0) &
+                    (new_line[:, 0] < max_x) &
+                    (new_line[:, 1] < max_y)
+            ]
+            lines.append((new_line[:, 0], new_line[:, 1]))
 
         return lines
 

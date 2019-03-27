@@ -35,12 +35,10 @@ def main(model, detectors, angle, rotations, prefix, patient):
     sinogram = []
     reverse = np.zeros(tomograph.img.shape, dtype=np.float64)
     count = np.zeros(tomograph.img.shape, dtype=np.float64)
-    kernel = np.array([-2, 5, -2])
 
     for i in tqdm(range(rotations)):
         tomograph.rotate(step)
         scan = tomograph.scan()
-        #sinogram.append(np.convolve(scan, kernel))
         sinogram.append(scan)
         tomograph.draw(reverse, count, scan)
 
