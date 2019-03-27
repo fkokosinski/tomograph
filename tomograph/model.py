@@ -31,22 +31,12 @@ class BaseTomograph(metaclass=abc.ABCMeta):
 
     def rotate(self, angle):
         """ Perform tomograph rotation. """
-        # convert to radians
-        alpha = np.deg2rad(angle)
-
-        # get rotation matrix
-        rotation_mat = np.array([
-            [np.cos(alpha), np.sin(alpha)],
-            [-np.sin(alpha), np.cos(alpha)]
-        ])
-
-        # apply transformation to emitter/detector coords
-        self.emitters = array_round(self.emitters.dot(rotation_mat))
-        self.detectors = array_round(self.detectors.dot(rotation_mat))
+        self.angle += angle
 
     def __init__(self, emitters, detectors):
         self.emitters = emitters
         self.detectors = detectors
+        self.angle = 0
 
 
 class ConeTomograph(BaseTomograph):

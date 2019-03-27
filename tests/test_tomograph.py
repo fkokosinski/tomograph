@@ -1,37 +1,86 @@
 import numpy as np
-from tomograph.model import ConeTomograph
+from tomograph.model import BaseTomograph
 
 
-def test_tomograph_create():
-    img = 'tests/test.jpg'
-    num = 3
-    angle = 180
-    emitter_expected = np.array([0, 362])
-    detectors_expected = np.array([
-        [-362, 0],
-        [0, -362],
-        [362, 0]
+class DummyTomograph(BaseTomograph):
+    def get_lines(self):
+        x = np.linspace(0, 9, num=10, dtype=int)
+        line = (x, x)
+        return [line]
+
+    def __init__(self, emitters, detectors):
+        super(DummyTomograph, self).__init__(emitters, detectors)
+
+
+def test_model_base_tomograph():
+    detectors = np.array([
+        [1, 2],
+        [3, 4],
+        [5, 6]
     ])
-
-    tomograph = ConeTomograph(img, num, angle)
-
-    assert np.alltrue(tomograph.emitters == emitter_expected)
-    assert np.alltrue(tomograph.detectors == detectors_expected)
-
-
-def test_tomograph_rotate():
-    img = 'tests/test.jpg'
-    num = 3
-    angle = 180
-    tomograph = ConeTomograph(img, num, angle)
-    emitter_expected = np.array([-362, 0])
-    detectors_expected = np.array([
-        [0, -362],
-        [362, 0],
-        [0, 362]
+    emitters = np.array([
+        [10, 20],
+        [30, 40]
     ])
+    tomograph = DummyTomograph(emitters, detectors)
 
-    tomograph.rotate(90)
+    assert np.alltrue(tomograph.emitters == emitters)
+    assert np.alltrue(tomograph.detectors == detectors)
+    assert tomograph.angle == 0
 
-    assert np.alltrue(tomograph.emitters == emitter_expected)
-    assert np.alltrue(tomograph.detectors == detectors_expected)
+
+def test_model_base_tomograph_rotate():
+    detectors = np.array([
+        [1, 2],
+        [3, 4],
+        [5, 6]
+    ])
+    emitters = np.array([
+        [10, 20],
+        [30, 40]
+    ])
+    tomograph = DummyTomograph(emitters, detectors)
+
+    tomograph.rotate(34)
+    tomograph.rotate(-12)
+    assert tomograph.angle == 22
+
+
+def test_model_base_tomograph_scan():
+    expected = np.array([0.4])
+
+    # not really needed, only for tomograph constructor
+    detectors = np.array([])
+    emitters = np.array([])
+
+    # prepare dummy image
+    image = np.zeros((10, 10))
+    image[3:7, 3:7] = 1.0
+
+    tomograph = DummyTomograph(emitters, detectors)
+    tomograph.img = image
+
+    scan = tomograph.scan()
+    assert np.allclose(scan, expected)
+
+
+def test_model_base_tomograph_draw():
+    x = np.linspace(0, 9, num=10, dtype=int)
+    expected_out = np.zeros((10, 10))
+    expected_count = np.zeros((10, 10))
+    expected_out[x, x] = 0.67
+    expected_count[x, x] = 1
+
+    # not really needed, only for tomograph constructor
+    detectors = np.array([])
+    emitters = np.array([])
+    scans = np.array([0.67])
+
+    # prepare arrays
+    out = np.zeros((10, 10))
+    count = np.zeros((10, 10))
+
+    tomograph = DummyTomograph(emitters, detectors)
+    tomograph.draw(out, count, scans)
+    assert np.allclose(out, expected_out)
+    assert np.alltrue(count == expected_count)
