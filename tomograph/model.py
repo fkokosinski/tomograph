@@ -74,7 +74,7 @@ class ConeTomograph(BaseTomograph):
         radius = calc_radius(*self.img.shape)
 
         # calulcate emitter/detector position
-        emitters = np.array([0, radius])
+        emitters = np.array([[0, radius]])
         detectors = circle_points(detectors_angle,
                                   detectors_num, radius)
 
