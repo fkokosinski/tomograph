@@ -13,7 +13,7 @@ tomograph_switch = {
 
 @click.command()
 @click.option('--model', type=click.Choice(['cone', 'parallel']),
-              help='Model of beams used in tomography')
+              required=True, help='Model of beams used in tomography')
 @click.option('--detectors', required=True, type=int,
               help='Number of detectors')
 @click.option('--angle', required=True, type=float,
