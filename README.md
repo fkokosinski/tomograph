@@ -60,3 +60,8 @@ Example script that does Radon transform using cone beam model:
         sinogram.append(scan)
 
     imsave('radon.bmp', np.array(sinogram).T)
+
+## Live demonstration
+| Beam lines                  | Radon transform                   | reverse Radon transform                     |
+|-----------------------------|-----------------------------------|---------------------------------------------|
+| ![beam lines](res/scan.gif) | ![radon transform](res/radon.gif) | ![reverse radon transform](res/reverse.gif) |
