@@ -19,5 +19,13 @@ install:
 script:
     - tox
 
+deploy:
+    provider: pypi
+    user: fkokosinski
+    password:
+        secure: T6ceFOjwAkfjFi6clg/E083wsW3bb9xxYH8fbMuKRfP6pb/z175MRdIWz0FPx9LPK/ud2YdxYPsOqtc0nPdeq2yDHXI8BmVrqCFAb15IZWwO+uLip7umDFIeOwVBY8vhZjBqibdC9nnOwtJcjIL5At4SXJZMwyyb1tXBoaudeQ4LSYSi6kE8YhjGOmUK+/olkYfoX3Hus/LCoeR58zbwVx7OSVr0i1DmlpWe3ZfQnxTPdW8L2cCo0SHtYu1qv4uKYjuDixIsjFzshJ+9GhSSggzCCVE4ciIUhTVlblbr2AGP5R0C3HXiknsfvPCLHWC7dc61MDyLVcRoRaRhLmI5BcG9Jau0MGXdN+6M11+HCbtCEv25j1vqASK4BMN5/xUN+EVVv6aEOOGtZMWCo9tNQO3OiQa3uADdFhjiFHWU1uIeEeT+sQjFX6mXVTCrfn7HN+CM/CD3lX1VXJz9NluZbSLgusiECJEsujk/G7qeMltXXS1xBiAM9WIXhgcOInxLwgC3ze4+h3F1sGzUx4pIgl23+Gx/H5fN95B5BQf6nq8cLLKKHapO7JO3ySwIeEhysoh2WXxcuteqkMmeCrWks85dXPDVFz9zxEanNETw3kb9zbb95+wKO2RSDHGxbiSyWMrYuFianlUS87xKdeGfzXCF0FtvNyCX8NP7ndnZrnY=
+    on:
+        tags: true
+
 notifications:
     email: false
