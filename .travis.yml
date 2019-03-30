@@ -21,11 +21,12 @@ script:
 
 deploy:
     provider: pypi
-    user: fkokosinski
+    user: "fkokosinski"
     password:
-        secure: T6ceFOjwAkfjFi6clg/E083wsW3bb9xxYH8fbMuKRfP6pb/z175MRdIWz0FPx9LPK/ud2YdxYPsOqtc0nPdeq2yDHXI8BmVrqCFAb15IZWwO+uLip7umDFIeOwVBY8vhZjBqibdC9nnOwtJcjIL5At4SXJZMwyyb1tXBoaudeQ4LSYSi6kE8YhjGOmUK+/olkYfoX3Hus/LCoeR58zbwVx7OSVr0i1DmlpWe3ZfQnxTPdW8L2cCo0SHtYu1qv4uKYjuDixIsjFzshJ+9GhSSggzCCVE4ciIUhTVlblbr2AGP5R0C3HXiknsfvPCLHWC7dc61MDyLVcRoRaRhLmI5BcG9Jau0MGXdN+6M11+HCbtCEv25j1vqASK4BMN5/xUN+EVVv6aEOOGtZMWCo9tNQO3OiQa3uADdFhjiFHWU1uIeEeT+sQjFX6mXVTCrfn7HN+CM/CD3lX1VXJz9NluZbSLgusiECJEsujk/G7qeMltXXS1xBiAM9WIXhgcOInxLwgC3ze4+h3F1sGzUx4pIgl23+Gx/H5fN95B5BQf6nq8cLLKKHapO7JO3ySwIeEhysoh2WXxcuteqkMmeCrWks85dXPDVFz9zxEanNETw3kb9zbb95+wKO2RSDHGxbiSyWMrYuFianlUS87xKdeGfzXCF0FtvNyCX8NP7ndnZrnY=
+        secure: "E2PkfkvDSyV58b6te6GrWf/RHj3+coWhOLNJsknJ1y1wbSVSwL/bLjgb+LozNp+L1GhMMW5+r/WAn8KftxPCe+RQqBogiAoNwKo/ns0KM1HkJN+weWxo9tmtNi2TYW8gNiW9pSSDQbX6ZQv8/h5lb8EcTC31ztJCJb9ozXmwBU18UPUeN/tckqAwO7WgAtJ9au0HD7IXDQ8vNIb90Id71s8QeyJQwtn9JHWk3TUHh1k5N0yEyDHyRlc0iYusWfZOLY+fudAPoYtwYTBbR6q8Qc03o0mFIYU0a2e7zZgbhARWx9GFPlSTOMeHEZWkAicgEpbAiZrzqFMOh/ry1KgpsGxwL8Un5UzjATUCUo6QzHMKcMnjVhNlXbptN8rNHbyZ7qTxe6gppQKUxZfYJBhhak5X1vIr6uJD++7gNBj1kOvfcWrxbzzKE8cSaG3bDS6E7lacMDtNqmOEw9IcGY/qOFk8eYWa2weSAlfZLLrijRU5peyP6vrlWoeDqapT4BJbdbxv5R4peBiZklQHZCMQTDHiAO17nh6dk5KZl2m4Fd4M6dslfSzuTo0/SLW8MHkVaI+alwv1HrbZNjr+K92sXWdydqmvAJZPTSSGcd4Xi0t5ObEznI6NSRTgwl1uNhMFVHO5wPSGTe5Y501ZZgImk5N/nPX1Yg7n+qsB7LEWgbA="
     on:
         tags: true
+        python: "3.6"
 
 notifications:
     email: false
