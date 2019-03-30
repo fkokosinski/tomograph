@@ -102,7 +102,7 @@ class ParallelTomograph(BaseTomograph):
 
         # get transformations
         mat_t = translate(max_x/2, max_y/2)
-        mat_r = rotate(self.angle)
+        mat_r = rotate(np.deg2rad(self.angle))
         transformations = [mat_r, mat_t]
 
         # transform
