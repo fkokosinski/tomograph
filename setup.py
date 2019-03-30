@@ -25,12 +25,12 @@ setuptools.setup(
     entry_points=entry_points,
     classifiers=[
         'Intended Audience :: Developers',
-        'Intended Audience :: Healthcare Industry'
+        'Intended Audience :: Healthcare Industry',
         'License :: OSI Approved :: MIT License',
         'Operating System :: POSIX :: Linux',
-        'Development Status :: Alpha',
+        'Development Status :: 3 - Alpha',
         'Programming Language :: Python',
-        'Programming Language :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
