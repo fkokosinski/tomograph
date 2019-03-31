@@ -2,31 +2,31 @@ dist: xenial
 language: python
 
 matrix:
-    include:
-        - python: 3.5
-          env: TOXENV=py35
-        - python: 3.6
-          env: TOXENV=py36
-        - python: 3.7
-          env: TOXENV=py37
+  include:
+  - python: 3.5
+    env: TOXENV=py35
+  - python: 3.6
+    env: TOXENV=py36
+  - python: 3.7
+    env: TOXENV=py37
 
 before_install:
-    - sudo apt-get update -qq
+  - sudo apt-get update -qq
 
 install:
-    - sudo apt-get install -y -qq python-tox
+  - sudo apt-get install -y -qq python-tox
 
 script:
-    - tox
+  - tox
 
 deploy:
-    provider: pypi
-    user: "fkokosinski"
-    password:
-        secure: "E2PkfkvDSyV58b6te6GrWf/RHj3+coWhOLNJsknJ1y1wbSVSwL/bLjgb+LozNp+L1GhMMW5+r/WAn8KftxPCe+RQqBogiAoNwKo/ns0KM1HkJN+weWxo9tmtNi2TYW8gNiW9pSSDQbX6ZQv8/h5lb8EcTC31ztJCJb9ozXmwBU18UPUeN/tckqAwO7WgAtJ9au0HD7IXDQ8vNIb90Id71s8QeyJQwtn9JHWk3TUHh1k5N0yEyDHyRlc0iYusWfZOLY+fudAPoYtwYTBbR6q8Qc03o0mFIYU0a2e7zZgbhARWx9GFPlSTOMeHEZWkAicgEpbAiZrzqFMOh/ry1KgpsGxwL8Un5UzjATUCUo6QzHMKcMnjVhNlXbptN8rNHbyZ7qTxe6gppQKUxZfYJBhhak5X1vIr6uJD++7gNBj1kOvfcWrxbzzKE8cSaG3bDS6E7lacMDtNqmOEw9IcGY/qOFk8eYWa2weSAlfZLLrijRU5peyP6vrlWoeDqapT4BJbdbxv5R4peBiZklQHZCMQTDHiAO17nh6dk5KZl2m4Fd4M6dslfSzuTo0/SLW8MHkVaI+alwv1HrbZNjr+K92sXWdydqmvAJZPTSSGcd4Xi0t5ObEznI6NSRTgwl1uNhMFVHO5wPSGTe5Y501ZZgImk5N/nPX1Yg7n+qsB7LEWgbA="
-    on:
-        tags: true
-        python: "3.6"
+  provider: pypi
+  user: "fkokosinski"
+  password:
+    secure: Q0/mSX5V+MvCZ5Bb2RZmUH7ch3RLN6qdq8SRjxckLYh0sjPc1o6fYISIewhA0OynuScM3ve6/H2Cxjshp3IMZdySXXIwYwsrQ6fQF21cl6mF3RgFci3it5VbkBdqThamu9HClJtHPxKTqgfEXC7mzRIPnuRQ9T6ZDOTIIZVzk/e1OUH6Q/vI/UpPZaD2OrwumctRQaWupJUrJNZHeN6d7BBkD5XYn9qo0g932aRHip8SLUGS7qSKE+VmircYDSksDR1Jn5kpD0ePYegPJP1jCeb9UNlr+fMb6SKgwIzdnn0nHMtt44NMiv7+Ve9tqKMiyzbBbkh46ngj+phxEuJST5/JVMaMZd1Cj8d80d6/KZMKOv8e6mLBdqxgs5UJvnNobKxlYXoGvVrJd0c5OxNoWEmMsaGHMUaHyZ811c6Gin9rRz5Bmd73mwyr/81ohvDvmIHrUFN4HKE+AmQtvS3g5RiVaqPQ4Pjf8TSHmnHIMlCr7Hd90X6ENnJaNjTnKozw/VOfVodeZBPEipxjUmacO5N+UQbMCMu+uu0A4x9dVnf33H+9ugAyVkKqiO9OpnWK54nqV8BFBDYS/QhYsFcSa/U8TZmA25ju1UM8tns2VxIoPYm5/ehdjNRm7+NJ9PMYeO5/tgRqQzr8BwMWGEeDs7Ctc6ecs2jVyhdv2fQFon0=
+  on:
+    tags: true
+    python: '3.6'
 
 notifications:
-    email: false
+  email: false
